@@ -1,0 +1,101 @@
+@page
+@model RecipeTracker.Pages.Recipes.CreateModel
+@{
+    ViewData["Title"] = "Create Recipe";
+}
+
+<div class="container mt-4">
+    <h1>Create New Recipe</h1>
+    
+    <form method="post" id="recipeForm">
+        <div class="mb-3">
+            <label asp-for="Recipe.Name" class="form-label"></label>
+            <input asp-for="Recipe.Name" class="form-control" required />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Recipe.Description" class="form-label"></label>
+            <textarea asp-for="Recipe.Description" class="form-control" rows="3"></textarea>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label asp-for="Recipe.PrepTimeMinutes" class="form-label">Prep Time (minutes)</label>
+                <input asp-for="Recipe.PrepTimeMinutes" class="form-control" type="number" min="0" />
+            </div>
+            <div class="col-md-4 mb-3">
+                <label asp-for="Recipe.CookTimeMinutes" class="form-label">Cook Time (minutes)</label>
+                <input asp-for="Recipe.CookTimeMinutes" class="form-control" type="number" min="0" />
+            </div>
+            <div class="col-md-4 mb-3">
+                <label asp-for="Recipe.Servings" class="form-label"></label>
+                <input asp-for="Recipe.Servings" class="form-control" type="number" min="1" />
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Ingredients</label>
+            <div id="ingredientsList">
+                <div class="ingredient-item mb-2">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <input type="text" name="IngredientNames" class="form-control" placeholder="Ingredient name" required />
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" name="IngredientQuantities" class="form-control" placeholder="Quantity" required />
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" name="IngredientUnits" class="form-control" placeholder="Unit" />
+                        </div>
+                        <div class="col-md-1">
+                            <button type="button" class="btn btn-danger btn-sm remove-ingredient" onclick="removeIngredient(this)">×</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="btn btn-sm btn-secondary mt-2" onclick="addIngredient()">Add Ingredient</button>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Recipe.Instructions" class="form-label"></label>
+            <textarea asp-for="Recipe.Instructions" class="form-control" rows="6"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <button type="submit" class="btn btn-primary">Create Recipe</button>
+            <a asp-page="Index" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    function addIngredient() {
+        const ingredientsList = document.getElementById('ingredientsList');
+        const newIngredient = document.createElement('div');
+        newIngredient.className = 'ingredient-item mb-2';
+        newIngredient.innerHTML = `
+            <div class="row">
+                <div class="col-md-5">
+                    <input type="text" name="IngredientNames" class="form-control" placeholder="Ingredient name" required />
+                </div>
+                <div class="col-md-3">
+                    <input type="text" name="IngredientQuantities" class="form-control" placeholder="Quantity" required />
+                </div>
+                <div class="col-md-3">
+                    <input type="text" name="IngredientUnits" class="form-control" placeholder="Unit" />
+                </div>
+                <div class="col-md-1">
+                    <button type="button" class="btn btn-danger btn-sm remove-ingredient" onclick="removeIngredient(this)">×</button>
+                </div>
+            </div>
+        `;
+        ingredientsList.appendChild(newIngredient);
+    }
+
+    function removeIngredient(button) {
+        const ingredientsList = document.getElementById('ingredientsList');
+        if (ingredientsList.children.length > 1) {
+            button.closest('.ingredient-item').remove();
+        }
+    }
+</script>
