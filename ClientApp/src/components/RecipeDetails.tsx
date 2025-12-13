@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import YoutubeEmbed from './YoutubeEmbed';
 import { useParams, Link } from 'react-router-dom';
 import { Recipe } from '../types';
 import { recipeService } from '../services';
@@ -23,28 +24,6 @@ function RecipeDetails() {
     } finally {
       setLoading(false);
     }
-  };
-
-  const getEmbedUrl = (url: string): string => {
-    if (!url) return '';
-    
-    try {
-      const urlObj = new URL(url);
-      const videoId = urlObj.searchParams.get('v');
-      
-      if (videoId) {
-        return `https://www.youtube.com/embed/${videoId}`;
-      }
-      
-      if (url.includes('youtu.be/')) {
-        const id = url.split('youtu.be/')[1].split('?')[0];
-        return `https://www.youtube.com/embed/${id}`;
-      }
-    } catch (e) {
-      console.error('Error parsing URL:', e);
-    }
-    
-    return url;
   };
 
   if (loading) {
@@ -96,13 +75,7 @@ function RecipeDetails() {
           {recipe.youtubeUrl && (
             <>
               <h3>Video</h3>
-              <div className="ratio ratio-16x9">
-                <iframe 
-                  src={getEmbedUrl(recipe.youtubeUrl)} 
-                  allowFullScreen
-                  title="Recipe video"
-                ></iframe>
-              </div>
+              <YoutubeEmbed url={recipe.youtubeUrl} />
             </>
           )}
         </div>
