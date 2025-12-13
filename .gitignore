@@ -7,3 +7,11 @@ obj/
 *.swp
 *~
 .DS_Store
+
+# React / Node
+ClientApp/node_modules/
+ClientApp/dist/
+ClientApp/.vite/
+wwwroot/assets/
+wwwroot/index.html
+wwwroot/vite.svg
