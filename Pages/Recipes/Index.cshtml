@@ -24,12 +24,20 @@
                 <div class="col-md-6 col-lg-4 mb-4">
                     <div class="card h-100">
                         <div class="card-body">
-                            <h5 class="card-title">@recipe.Name</h5>
+                            <h5 class="card-title">
+                                <a asp-page="Details" asp-route-id="@recipe.Id" class="text-decoration-none">
+                                    @recipe.Name
+                                    @if (!string.IsNullOrWhiteSpace(recipe.YoutubeUrl))
+                                    {
+                                        <i class="bi bi-play-circle-fill text-danger" title="Video available"></i>
+                                    }
+                                </a>
+                            </h5>
                             <p class="card-text">@recipe.Description</p>
                             <div class="mb-2">
                                 <small class="text-muted">
-                                    <i class="bi bi-clock"></i> Prep: @recipe.PrepTimeMinutes min | 
-                                    Cook: @recipe.CookTimeMinutes min | 
+                                    <i class="bi bi-clock"></i> Prep: @recipe.PrepTimeMinutes min |
+                                    Cook: @recipe.CookTimeMinutes min |
                                     Servings: @recipe.Servings
                                 </small>
                             </div>

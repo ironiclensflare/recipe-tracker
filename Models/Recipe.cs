@@ -29,6 +29,9 @@ public class Recipe
 
     [BsonElement("servings")]
     public int Servings { get; set; }
+
+    [BsonElement("youtubeUrl")]
+    public string? YoutubeUrl { get; set; }
 }
 
 public class Ingredient

@@ -62,6 +62,11 @@
         </div>
 
         <div class="mb-3">
+            <label asp-for="Recipe.YoutubeUrl" class="form-label">YouTube Video URL (optional)</label>
+            <input asp-for="Recipe.YoutubeUrl" class="form-control" type="url" placeholder="https://www.youtube.com/watch?v=..." />
+        </div>
+
+        <div class="mb-3">
             <button type="submit" class="btn btn-primary">Create Recipe</button>
             <a asp-page="Index" class="btn btn-secondary">Cancel</a>
         </div>

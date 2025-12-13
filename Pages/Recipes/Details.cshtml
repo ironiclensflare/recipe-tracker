@@ -39,6 +39,37 @@
 
             <h3>Instructions</h3>
             <p style="white-space: pre-wrap;">@Model.Recipe.Instructions</p>
+
+            @if (!string.IsNullOrWhiteSpace(Model.Recipe.YoutubeUrl))
+            {
+                <h3>Video</h3>
+                <div class="ratio ratio-16x9">
+                    <iframe src="@GetEmbedUrl(Model.Recipe.YoutubeUrl)" allowfullscreen></iframe>
+                </div>
+            }
         </div>
     </div>
 </div>
+
+@functions {
+    string GetEmbedUrl(string url)
+    {
+        if (string.IsNullOrWhiteSpace(url)) return "";
+        
+        var uri = new Uri(url);
+        var videoId = System.Web.HttpUtility.ParseQueryString(uri.Query).Get("v");
+        
+        if (!string.IsNullOrWhiteSpace(videoId))
+        {
+            return $"https://www.youtube.com/embed/{videoId}";
+        }
+        
+        if (url.Contains("youtu.be/"))
+        {
+            var id = url.Split("youtu.be/").Last().Split('?').First();
+            return $"https://www.youtube.com/embed/{id}";
+        }
+        
+        return url;
+    }
+}
