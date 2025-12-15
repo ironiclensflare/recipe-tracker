@@ -7,6 +7,22 @@ function RecipeList() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const getYoutubeVideoId = (url: string): string | null => {
+    if (!url) return null;
+    try {
+      const urlObj = new URL(url);
+      const videoId = urlObj.searchParams.get('v');
+      if (videoId) {
+        return videoId;
+      } else if (url.includes('youtu.be/')) {
+        return url.split('youtu.be/')[1].split('?')[0];
+      }
+    } catch (e) {
+      console.error('Error parsing URL:', e);
+    }
+    return null;
+  };
+
   useEffect(() => {
     loadRecipes();
   }, []);
@@ -81,6 +97,16 @@ function RecipeList() {
                       )}
                     </ul>
                   </div>
+                  {recipe.youtubeUrl && getYoutubeVideoId(recipe.youtubeUrl) && (
+                    <div className="mb-2">
+                      <img 
+                        src={`https://img.youtube.com/vi/${getYoutubeVideoId(recipe.youtubeUrl)}/mqdefault.jpg`}
+                        alt="Video thumbnail"
+                        className="img-fluid rounded"
+                        style={{ width: '100%' }}
+                      />
+                    </div>
+                  )}
                 </div>
                 <div className="card-footer bg-transparent">
                   <Link to={`/recipes/${recipe.id}`} className="btn btn-sm btn-info">View</Link>
