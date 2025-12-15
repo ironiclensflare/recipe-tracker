@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Recipe, Ingredient } from '../types';
 import { recipeService } from '../services';
@@ -7,6 +7,7 @@ function RecipeForm() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const isEdit = !!id;
+  const ingredientNameRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   const [recipe, setRecipe] = useState<Recipe>({
     name: '',
@@ -69,6 +70,19 @@ function RecipeForm() {
     const newIngredients = [...recipe.ingredients];
     newIngredients[index] = { ...newIngredients[index], [field]: value };
     setRecipe({ ...recipe, ingredients: newIngredients });
+  };
+
+  const handleUnitBlur = (index: number) => {
+    // Only add a new ingredient if this is the last one
+    if (index === recipe.ingredients.length - 1) {
+      const newIngredients = [...recipe.ingredients, { name: '', quantity: '', unit: '' }];
+      setRecipe({ ...recipe, ingredients: newIngredients });
+      
+      // Focus the new ingredient name field after state updates
+      setTimeout(() => {
+        ingredientNameRefs.current[index + 1]?.focus();
+      }, 0);
+    }
   };
 
   return (
@@ -142,6 +156,7 @@ function RecipeForm() {
                     placeholder="Ingredient name"
                     value={ingredient.name}
                     onChange={(e) => updateIngredient(index, 'name', e.target.value)}
+                    ref={(el) => (ingredientNameRefs.current[index] = el)}
                     required
                   />
                 </div>
@@ -162,6 +177,7 @@ function RecipeForm() {
                     placeholder="Unit"
                     value={ingredient.unit}
                     onChange={(e) => updateIngredient(index, 'unit', e.target.value)}
+                    onBlur={() => handleUnitBlur(index)}
                   />
                 </div>
                 <div className="col-md-1">
