@@ -66,4 +66,17 @@ public class RecipesController : ControllerBase
         await _mongoDBService.DeleteRecipeAsync(id);
         return NoContent();
     }
+
+    [HttpGet("backup")]
+    public async Task<IActionResult> BackupRecipes()
+    {
+        var recipes = await _mongoDBService.GetAllRecipesAsync();
+        var json = System.Text.Json.JsonSerializer.Serialize(recipes, new System.Text.Json.JsonSerializerOptions 
+        { 
+            WriteIndented = true 
+        });
+        var bytes = System.Text.Encoding.UTF8.GetBytes(json);
+        var timestamp = DateTime.UtcNow.ToString("yyyyMMdd_HHmmss");
+        return File(bytes, "application/json", $"recipes_backup_{timestamp}.json");
+    }
 }
