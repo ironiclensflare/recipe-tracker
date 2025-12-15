@@ -32,4 +32,10 @@ public class MongoDBService
 
     public async Task DeleteRecipeAsync(string id) =>
         await _recipes.DeleteOneAsync(r => r.Id == id);
+
+    public async Task DeleteAllRecipesAsync() =>
+        await _recipes.DeleteManyAsync(_ => true);
+
+    public async Task CreateManyRecipesAsync(List<Recipe> recipes) =>
+        await _recipes.InsertManyAsync(recipes);
 }

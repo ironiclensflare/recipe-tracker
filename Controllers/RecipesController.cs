@@ -79,4 +79,46 @@ public class RecipesController : ControllerBase
         var timestamp = DateTime.UtcNow.ToString("yyyyMMdd_HHmmss");
         return File(bytes, "application/json", $"recipes_backup_{timestamp}.json");
     }
+
+    [HttpPost("restore")]
+    public async Task<IActionResult> RestoreRecipes(IFormFile file)
+    {
+        Console.WriteLine("RestoreRecipes endpoint called");
+        if (file == null || file.Length == 0)
+        {
+            return BadRequest("No file uploaded");
+        }
+
+        if (!file.ContentType.Equals("application/json", StringComparison.OrdinalIgnoreCase))
+        {
+            return BadRequest("File must be a JSON file");
+        }
+
+        Console.WriteLine($"Uploaded file: {file.FileName}, Size: {file.Length} bytes, ContentType: {file.ContentType}");
+
+        try
+        {
+            using var stream = new StreamReader(file.OpenReadStream());
+            var json = await stream.ReadToEndAsync();
+            var recipes = System.Text.Json.JsonSerializer.Deserialize<List<Recipe>>(json);
+
+            if (recipes == null || recipes.Count == 0)
+            {
+                return BadRequest("No recipes found in the backup file");
+            }
+
+            await _mongoDBService.DeleteAllRecipesAsync();
+            await _mongoDBService.CreateManyRecipesAsync(recipes);
+
+            return Ok(new { message = $"Successfully restored {recipes.Count} recipes", count = recipes.Count });
+        }
+        catch (System.Text.Json.JsonException)
+        {
+            return BadRequest("Invalid JSON format");
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Error restoring recipes: {ex.Message}");
+        }
+    }
 }
