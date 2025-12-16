@@ -27,6 +27,22 @@ function ShoppingList() {
     }
   };
 
+  const handleClearShortlist = async () => {
+    if (!window.confirm('Are you sure you want to clear the entire shopping list?')) return;
+    
+    try {
+      const recipes = await shortlistService.getShortlistedRecipes();
+      for (const recipe of recipes) {
+        if (recipe.id) {
+          await shortlistService.removeFromShortlist(recipe.id);
+        }
+      }
+      setShoppingList({});
+    } catch (error) {
+      console.error('Error clearing shortlist:', error);
+    }
+  };
+
   if (loading) {
     return <div className="text-center mt-4">Loading...</div>;
   }
@@ -49,7 +65,16 @@ function ShoppingList() {
     <div className="mt-4">
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h1>Shopping List</h1>
-        <Link to="/" className="btn btn-secondary">Back to Recipes</Link>
+        <div>
+          <button 
+            onClick={handleClearShortlist}
+            className="btn btn-danger"
+            title="Clear shopping list"
+          >
+            <i className="bi bi-trash"></i>
+          </button>
+          <Link to="/" className="btn btn-secondary ms-2">Back to Recipes</Link>
+        </div>
       </div>
 
       {recipeNames.map((recipeName) => (
