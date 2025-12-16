@@ -3,6 +3,7 @@ import RecipeList from './components/RecipeList';
 import RecipeDetails from './components/RecipeDetails';
 import RecipeForm from './components/RecipeForm';
 import ShoppingList from './components/ShoppingList';
+import Backup from './components/Backup';
 
 function App() {
   return (
@@ -18,6 +19,9 @@ function App() {
               <li className="nav-item">
                 <Link className="nav-link text-dark" to="/shopping-list">Shopping List</Link>
               </li>
+              <li className="nav-item">
+                <Link className="nav-link text-dark" to="/backup">Backup</Link>
+              </li>
             </ul>
           </div>
         </div>
@@ -31,6 +35,7 @@ function App() {
             <Route path="/recipes/edit/:id" element={<RecipeForm />} />
             <Route path="/recipes/:id" element={<RecipeDetails />} />
             <Route path="/shopping-list" element={<ShoppingList />} />
+            <Route path="/backup" element={<Backup />} />
           </Routes>
         </main>
       </div>
