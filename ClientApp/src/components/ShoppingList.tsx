@@ -11,6 +11,7 @@ interface Ingredient {
 function ShoppingList() {
   const [shoppingList, setShoppingList] = useState<Record<string, Ingredient[]>>({});
   const [loading, setLoading] = useState(true);
+  const [checkedItems, setCheckedItems] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     loadShoppingList();
@@ -38,9 +39,23 @@ function ShoppingList() {
         }
       }
       setShoppingList({});
+      setCheckedItems(new Set());
     } catch (error) {
       console.error('Error clearing shortlist:', error);
     }
+  };
+
+  const toggleIngredient = (recipeName: string, index: number) => {
+    const key = `${recipeName}-${index}`;
+    setCheckedItems(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(key)) {
+        newSet.delete(key);
+      } else {
+        newSet.add(key);
+      }
+      return newSet;
+    });
   };
 
   if (loading) {
@@ -84,12 +99,25 @@ function ShoppingList() {
           </div>
           <div className="card-body">
             <ul className="list-unstyled mb-0">
-              {shoppingList[recipeName].map((ingredient, idx) => (
-                <li key={idx} className="mb-1">
-                  <i className="bi bi-check-square me-2"></i>
-                  {ingredient.quantity} {ingredient.unit} {ingredient.name}
-                </li>
-              ))}
+              {shoppingList[recipeName].map((ingredient, idx) => {
+                const itemKey = `${recipeName}-${idx}`;
+                const isChecked = checkedItems.has(itemKey);
+                return (
+                  <li 
+                    key={idx} 
+                    className="mb-1"
+                    onClick={() => toggleIngredient(recipeName, idx)}
+                    style={{ 
+                      cursor: 'pointer',
+                      textDecoration: isChecked ? 'line-through' : 'none',
+                      color: isChecked ? '#6c757d' : 'inherit',
+                      userSelect: 'none'
+                    }}
+                  >
+                    {ingredient.quantity} {ingredient.unit} {ingredient.name}
+                  </li>
+                );
+              })}
             </ul>
           </div>
         </div>
