@@ -52,10 +52,6 @@ function ShoppingList() {
         <Link to="/" className="btn btn-secondary">Back to Recipes</Link>
       </div>
 
-      <div className="alert alert-info">
-        Combined ingredients from {recipeNames.length} shortlisted recipe{recipeNames.length !== 1 ? 's' : ''}
-      </div>
-
       {recipeNames.map((recipeName) => (
         <div key={recipeName} className="card mb-3">
           <div className="card-header">
