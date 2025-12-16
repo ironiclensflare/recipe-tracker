@@ -2,16 +2,18 @@ import { useState, useEffect } from 'react';
 import YoutubeEmbed from './YoutubeEmbed';
 import { useParams, Link } from 'react-router-dom';
 import { Recipe } from '../types';
-import { recipeService } from '../services';
+import { recipeService, shortlistService } from '../services';
 
 function RecipeDetails() {
   const { id } = useParams<{ id: string }>();
   const [recipe, setRecipe] = useState<Recipe | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isShortlisted, setIsShortlisted] = useState(false);
 
   useEffect(() => {
     if (id) {
       loadRecipe(id);
+      checkShortlistStatus(id);
     }
   }, [id]);
 
@@ -23,6 +25,31 @@ function RecipeDetails() {
       console.error('Error loading recipe:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const checkShortlistStatus = async (recipeId: string) => {
+    try {
+      const ids = await shortlistService.getShortlistedIds();
+      setIsShortlisted(ids.includes(recipeId));
+    } catch (error) {
+      console.error('Error checking shortlist status:', error);
+    }
+  };
+
+  const handleToggleShortlist = async () => {
+    if (!id) return;
+    
+    try {
+      if (isShortlisted) {
+        await shortlistService.removeFromShortlist(id);
+        setIsShortlisted(false);
+      } else {
+        await shortlistService.addToShortlist(id);
+        setIsShortlisted(true);
+      }
+    } catch (error) {
+      console.error('Error toggling shortlist:', error);
     }
   };
 
@@ -39,7 +66,14 @@ function RecipeDetails() {
       <div className="d-flex justify-content-between align-items-center mb-4">
         <h1>{recipe.name}</h1>
         <div>
-          <Link to={`/recipes/edit/${recipe.id}`} className="btn btn-warning">Edit</Link>
+          <button 
+            onClick={handleToggleShortlist}
+            className={`btn ${isShortlisted ? 'btn-success' : 'btn-outline-success'}`}
+          >
+            <i className={`bi ${isShortlisted ? 'bi-star-fill' : 'bi-star'}`}></i>
+            {isShortlisted ? ' Shortlisted' : ' Add to Shortlist'}
+          </button>
+          <Link to={`/recipes/edit/${recipe.id}`} className="btn btn-warning ms-2">Edit</Link>
           <Link to="/" className="btn btn-secondary ms-2">Back to List</Link>
         </div>
       </div>

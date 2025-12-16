@@ -6,6 +6,7 @@ namespace RecipeTracker.Services;
 public class MongoDBService
 {
     private readonly IMongoCollection<Recipe> _recipes;
+    private readonly IMongoCollection<ShortlistedRecipe> _shortlistedRecipes;
 
     public MongoDBService(IConfiguration configuration)
     {
@@ -16,6 +17,7 @@ public class MongoDBService
         var client = new MongoClient(connectionString);
         var database = client.GetDatabase(databaseName);
         _recipes = database.GetCollection<Recipe>(collectionName);
+        _shortlistedRecipes = database.GetCollection<ShortlistedRecipe>("ShortlistedRecipes");
     }
 
     public async Task<List<Recipe>> GetAllRecipesAsync() =>
@@ -38,4 +40,24 @@ public class MongoDBService
 
     public async Task CreateManyRecipesAsync(List<Recipe> recipes) =>
         await _recipes.InsertManyAsync(recipes);
+
+    // Shortlist methods
+    public async Task<List<ShortlistedRecipe>> GetAllShortlistedRecipesAsync() =>
+        await _shortlistedRecipes.Find(_ => true).ToListAsync();
+
+    public async Task<ShortlistedRecipe?> GetShortlistedRecipeByRecipeIdAsync(string recipeId) =>
+        await _shortlistedRecipes.Find(s => s.RecipeId == recipeId).FirstOrDefaultAsync();
+
+    public async Task AddToShortlistAsync(string recipeId)
+    {
+        var existing = await GetShortlistedRecipeByRecipeIdAsync(recipeId);
+        if (existing == null)
+        {
+            var shortlistedRecipe = new ShortlistedRecipe { RecipeId = recipeId };
+            await _shortlistedRecipes.InsertOneAsync(shortlistedRecipe);
+        }
+    }
+
+    public async Task RemoveFromShortlistAsync(string recipeId) =>
+        await _shortlistedRecipes.DeleteOneAsync(s => s.RecipeId == recipeId);
 }

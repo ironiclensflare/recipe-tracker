@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Recipe } from '../types';
-import { recipeService } from '../services';
+import { recipeService, shortlistService } from '../services';
 
 function RecipeList() {
   const [recipes, setRecipes] = useState<Recipe[]>([]);
   const [loading, setLoading] = useState(true);
+  const [shortlistedIds, setShortlistedIds] = useState<Set<string>>(new Set());
 
   const getYoutubeVideoId = (url: string): string | null => {
     if (!url) return null;
@@ -25,6 +26,7 @@ function RecipeList() {
 
   useEffect(() => {
     loadRecipes();
+    loadShortlist();
   }, []);
 
   const loadRecipes = async () => {
@@ -35,6 +37,33 @@ function RecipeList() {
       console.error('Error loading recipes:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadShortlist = async () => {
+    try {
+      const ids = await shortlistService.getShortlistedIds();
+      setShortlistedIds(new Set(ids));
+    } catch (error) {
+      console.error('Error loading shortlist:', error);
+    }
+  };
+
+  const handleToggleShortlist = async (recipeId: string) => {
+    try {
+      if (shortlistedIds.has(recipeId)) {
+        await shortlistService.removeFromShortlist(recipeId);
+        setShortlistedIds(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(recipeId);
+          return newSet;
+        });
+      } else {
+        await shortlistService.addToShortlist(recipeId);
+        setShortlistedIds(prev => new Set(prev).add(recipeId));
+      }
+    } catch (error) {
+      console.error('Error toggling shortlist:', error);
     }
   };
 
@@ -109,7 +138,14 @@ function RecipeList() {
                   )}
                 </div>
                 <div className="card-footer bg-transparent">
-                  <Link to={`/recipes/${recipe.id}`} className="btn btn-sm btn-info">View</Link>
+                  <button 
+                    onClick={() => handleToggleShortlist(recipe.id!)}
+                    className={`btn btn-sm ${shortlistedIds.has(recipe.id!) ? 'btn-success' : 'btn-outline-success'}`}
+                    title={shortlistedIds.has(recipe.id!) ? 'Remove from shortlist' : 'Add to shortlist'}
+                  >
+                    <i className={`bi ${shortlistedIds.has(recipe.id!) ? 'bi-star-fill' : 'bi-star'}`}></i>
+                  </button>
+                  <Link to={`/recipes/${recipe.id}`} className="btn btn-sm btn-info ms-1">View</Link>
                   <Link to={`/recipes/edit/${recipe.id}`} className="btn btn-sm btn-warning ms-1">Edit</Link>
                   <button 
                     onClick={() => handleDelete(recipe.id!)} 
