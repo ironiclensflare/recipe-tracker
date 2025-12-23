@@ -20,11 +20,12 @@ const YoutubeEmbed: React.FC<YoutubeEmbedProps> = ({ url }) => {
     console.error('Error parsing URL:', e);
   }
   return (
-    <div className="ratio ratio-16x9">
+    <div className="relative w-full aspect-video">
       <iframe 
         src={embedUrl}
         allowFullScreen
         title="Recipe video"
+        className="absolute inset-0 w-full h-full rounded-lg"
       ></iframe>
     </div>
   );

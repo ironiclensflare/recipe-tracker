@@ -86,57 +86,57 @@ function RecipeForm() {
   };
 
   return (
-    <div className="container mt-4">
-      <h1>{isEdit ? 'Edit Recipe' : 'Create New Recipe'}</h1>
+    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+      <h1 className="text-3xl font-bold tracking-tight text-gray-900 mb-8">{isEdit ? 'Edit Recipe' : 'Create New Recipe'}</h1>
       
-      <form onSubmit={handleSubmit}>
-        <div className="mb-3">
-          <label className="form-label">Name</label>
+      <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-md p-6 sm:p-8">
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-gray-700 mb-2">Name</label>
           <input
             type="text"
-            className="form-control"
+            className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
             value={recipe.name}
             onChange={(e) => setRecipe({ ...recipe, name: e.target.value })}
             required
           />
         </div>
 
-        <div className="mb-3">
-          <label className="form-label">Description</label>
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
           <textarea
-            className="form-control"
+            className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
             rows={3}
             value={recipe.description}
             onChange={(e) => setRecipe({ ...recipe, description: e.target.value })}
           />
         </div>
 
-        <div className="row">
-          <div className="col-md-4 mb-3">
-            <label className="form-label">Prep Time (minutes)</label>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Prep Time (minutes)</label>
             <input
               type="number"
-              className="form-control"
+              className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               min="0"
               value={recipe.prepTimeMinutes}
               onChange={(e) => setRecipe({ ...recipe, prepTimeMinutes: parseInt(e.target.value) || 0 })}
             />
           </div>
-          <div className="col-md-4 mb-3">
-            <label className="form-label">Cook Time (minutes)</label>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Cook Time (minutes)</label>
             <input
               type="number"
-              className="form-control"
+              className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               min="0"
               value={recipe.cookTimeMinutes}
               onChange={(e) => setRecipe({ ...recipe, cookTimeMinutes: parseInt(e.target.value) || 0 })}
             />
           </div>
-          <div className="col-md-4 mb-3">
-            <label className="form-label">Servings</label>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Servings</label>
             <input
               type="number"
-              className="form-control"
+              className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
               min="1"
               value={recipe.servings}
               onChange={(e) => setRecipe({ ...recipe, servings: parseInt(e.target.value) || 1 })}
@@ -144,15 +144,15 @@ function RecipeForm() {
           </div>
         </div>
 
-        <div className="mb-3">
-          <label className="form-label">Ingredients</label>
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-gray-700 mb-2">Ingredients</label>
           {recipe.ingredients.map((ingredient, index) => (
-            <div key={index} className="ingredient-item mb-2">
-              <div className="row">
-                <div className="col-md-5">
+            <div key={index} className="mb-3">
+              <div className="flex gap-2">
+                <div className="flex-grow">
                   <input
                     type="text"
-                    className="form-control"
+                    className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                     placeholder="Ingredient name"
                     value={ingredient.name}
                     onChange={(e) => updateIngredient(index, 'name', e.target.value)}
@@ -160,30 +160,30 @@ function RecipeForm() {
                     required
                   />
                 </div>
-                <div className="col-md-3">
+                <div className="w-28">
                   <input
                     type="text"
-                    className="form-control"
+                    className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                     placeholder="Quantity"
                     value={ingredient.quantity}
                     onChange={(e) => updateIngredient(index, 'quantity', e.target.value)}
                     required
                   />
                 </div>
-                <div className="col-md-3">
+                <div className="w-28">
                   <input
                     type="text"
-                    className="form-control"
+                    className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                     placeholder="Unit"
                     value={ingredient.unit}
                     onChange={(e) => updateIngredient(index, 'unit', e.target.value)}
                     onBlur={() => handleUnitBlur(index)}
                   />
                 </div>
-                <div className="col-md-1">
+                <div>
                   <button
                     type="button"
-                    className="btn btn-danger btn-sm"
+                    className="h-full px-3 py-2 text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors font-medium text-lg leading-none"
                     onClick={() => removeIngredient(index)}
                   >
                     ×
@@ -192,37 +192,37 @@ function RecipeForm() {
               </div>
             </div>
           ))}
-          <button type="button" className="btn btn-sm btn-secondary mt-2" onClick={addIngredient}>
+          <button type="button" className="bg-gray-600 hover:bg-gray-700 text-white text-sm font-medium px-3 py-2 rounded-lg transition-colors" onClick={addIngredient}>
             Add Ingredient
           </button>
         </div>
 
-        <div className="mb-3">
-          <label className="form-label">Instructions</label>
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-gray-700 mb-2">Instructions</label>
           <textarea
-            className="form-control"
+            className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
             rows={6}
             value={recipe.instructions}
             onChange={(e) => setRecipe({ ...recipe, instructions: e.target.value })}
           />
         </div>
 
-        <div className="mb-3">
-          <label className="form-label">YouTube Video URL (optional)</label>
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-gray-700 mb-2">YouTube Video URL (optional)</label>
           <input
             type="url"
-            className="form-control"
+            className="block w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
             placeholder="https://www.youtube.com/watch?v=..."
             value={recipe.youtubeUrl || ''}
             onChange={(e) => setRecipe({ ...recipe, youtubeUrl: e.target.value })}
           />
         </div>
 
-        <div className="mb-3">
-          <button type="submit" className="btn btn-primary">
+        <div className="flex gap-2">
+          <button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-6 py-2 rounded-lg transition-colors">
             {isEdit ? 'Save Changes' : 'Create Recipe'}
           </button>
-          <button type="button" className="btn btn-secondary ms-2" onClick={() => navigate('/')}>
+          <button type="button" className="bg-gray-600 hover:bg-gray-700 text-white font-medium px-6 py-2 rounded-lg transition-colors" onClick={() => navigate('/')}>
             Cancel
           </button>
         </div>
