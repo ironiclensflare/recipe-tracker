@@ -66,53 +66,59 @@ function ShoppingList() {
 
   if (recipeNames.length === 0) {
     return (
-      <div className="mt-4">
-        <h1>Shopping List</h1>
-        <div className="alert alert-info mt-4">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+        <h1 className="text-3xl font-bold tracking-tight text-gray-900 mb-6">Shopping List</h1>
+        <div className="bg-blue-50 border border-blue-200 text-blue-800 px-4 py-3 rounded-lg mb-4">
           No recipes in your shortlist. Add recipes to your shortlist to create a shopping list.
         </div>
-        <Link to="/" className="btn btn-primary">Go to Recipes</Link>
+        <Link 
+          to="/" 
+          className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-lg transition-colors"
+        >
+          Go to Recipes
+        </Link>
       </div>
     );
   }
 
   return (
-    <div className="mt-4">
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h1>Shopping List</h1>
-        <div>
+    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold tracking-tight text-gray-900">Shopping List</h1>
+        <div className="flex gap-2">
           <button 
             onClick={handleClearShortlist}
-            className="btn btn-danger"
+            className="bg-red-600 hover:bg-red-700 text-white font-medium px-4 py-2 rounded-lg transition-colors"
             title="Clear shopping list"
           >
             <i className="bi bi-trash"></i>
           </button>
-          <Link to="/" className="btn btn-secondary ms-2">Back to Recipes</Link>
+          <Link 
+            to="/" 
+            className="bg-gray-600 hover:bg-gray-700 text-white font-medium px-4 py-2 rounded-lg transition-colors"
+          >
+            Back to Recipes
+          </Link>
         </div>
       </div>
 
       {recipeNames.map((recipeName) => (
-        <div key={recipeName} className="card mb-3">
-          <div className="card-header">
-            <h5 className="mb-0">{recipeName}</h5>
+        <div key={recipeName} className="bg-white rounded-lg shadow-md mb-4 overflow-hidden">
+          <div className="bg-gray-50 px-6 py-4 border-b border-gray-200">
+            <h5 className="text-lg font-semibold text-gray-900">{recipeName}</h5>
           </div>
-          <div className="card-body">
-            <ul className="list-unstyled mb-0">
+          <div className="p-6">
+            <ul className="space-y-2">
               {shoppingList[recipeName].map((ingredient, idx) => {
                 const itemKey = `${recipeName}-${idx}`;
                 const isChecked = checkedItems.has(itemKey);
                 return (
                   <li 
                     key={idx} 
-                    className="mb-1"
+                    className={`cursor-pointer select-none transition-colors py-1 px-2 rounded hover:bg-gray-50 ${
+                      isChecked ? 'line-through text-gray-400' : 'text-gray-700'
+                    }`}
                     onClick={() => toggleIngredient(recipeName, idx)}
-                    style={{ 
-                      cursor: 'pointer',
-                      textDecoration: isChecked ? 'line-through' : 'none',
-                      color: isChecked ? '#6c757d' : 'inherit',
-                      userSelect: 'none'
-                    }}
                   >
                     {ingredient.quantity} {ingredient.unit} {ingredient.name}
                   </li>
