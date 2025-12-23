@@ -58,44 +58,67 @@ function RecipeDetails() {
   }
 
   if (!recipe) {
-    return <div className="alert alert-danger mt-4">Recipe not found</div>;
+    return (
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+        <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg">
+          Recipe not found
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="container mt-4">
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h1>{recipe.name}</h1>
-        <div>
+    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-8">
+        <h1 className="text-3xl font-bold tracking-tight text-gray-900">{recipe.name}</h1>
+        <div className="flex flex-wrap gap-2">
           <button 
             onClick={handleToggleShortlist}
-            className={`btn ${isShortlisted ? 'btn-success' : 'btn-outline-success'}`}
+            className={`px-4 py-2 rounded-lg font-medium transition-colors inline-flex items-center ${
+              isShortlisted 
+                ? 'bg-green-600 text-white hover:bg-green-700' 
+                : 'bg-white text-green-600 border border-green-600 hover:bg-green-50'
+            }`}
           >
-            <i className={`bi ${isShortlisted ? 'bi-star-fill' : 'bi-star'}`}></i>
-            {isShortlisted ? ' Shortlisted' : ' Add to Shortlist'}
+            <i className={`bi ${isShortlisted ? 'bi-star-fill' : 'bi-star'} me-2`}></i>
+            {isShortlisted ? 'Shortlisted' : 'Add to Shortlist'}
           </button>
-          <Link to={`/recipes/edit/${recipe.id}`} className="btn btn-warning ms-2">Edit</Link>
-          <Link to="/" className="btn btn-secondary ms-2">Back to List</Link>
+          <Link 
+            to={`/recipes/edit/${recipe.id}`} 
+            className="bg-amber-500 hover:bg-amber-600 text-white font-medium px-4 py-2 rounded-lg transition-colors"
+          >
+            Edit
+          </Link>
+          <Link 
+            to="/" 
+            className="bg-gray-600 hover:bg-gray-700 text-white font-medium px-4 py-2 rounded-lg transition-colors"
+          >
+            Back to List
+          </Link>
         </div>
       </div>
 
-      <div className="card mb-4">
-        <div className="card-body">
-          <p className="lead">{recipe.description}</p>
+      <div className="bg-white rounded-lg shadow-md mb-8">
+        <div className="p-6 sm:p-8">
+          <p className="text-lg text-gray-700 mb-6">{recipe.description}</p>
           
-          <div className="row mb-3">
-            <div className="col-md-4">
-              <strong>Prep Time:</strong> {recipe.prepTimeMinutes} minutes
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8 p-4 bg-gray-50 rounded-lg">
+            <div>
+              <strong className="text-gray-900">Prep Time:</strong>
+              <span className="text-gray-700 ml-2">{recipe.prepTimeMinutes} minutes</span>
             </div>
-            <div className="col-md-4">
-              <strong>Cook Time:</strong> {recipe.cookTimeMinutes} minutes
+            <div>
+              <strong className="text-gray-900">Cook Time:</strong>
+              <span className="text-gray-700 ml-2">{recipe.cookTimeMinutes} minutes</span>
             </div>
-            <div className="col-md-4">
-              <strong>Servings:</strong> {recipe.servings}
+            <div>
+              <strong className="text-gray-900">Servings:</strong>
+              <span className="text-gray-700 ml-2">{recipe.servings}</span>
             </div>
           </div>
 
-          <h3>Ingredients</h3>
-          <ul>
+          <h3 className="text-2xl font-semibold text-gray-900 mb-4">Ingredients</h3>
+          <ul className="list-disc list-inside space-y-2 mb-8 text-gray-700">
             {recipe.ingredients.map((ingredient, idx) => (
               <li key={idx}>
                 {ingredient.quantity} {ingredient.unit} {ingredient.name}
@@ -103,12 +126,12 @@ function RecipeDetails() {
             ))}
           </ul>
 
-          <h3>Instructions</h3>
-          <p style={{ whiteSpace: 'pre-wrap' }}>{recipe.instructions}</p>
+          <h3 className="text-2xl font-semibold text-gray-900 mb-4">Instructions</h3>
+          <p className="whitespace-pre-wrap text-gray-700 mb-8">{recipe.instructions}</p>
 
           {recipe.youtubeUrl && (
             <>
-              <h3>Video</h3>
+              <h3 className="text-2xl font-semibold text-gray-900 mb-4">Video</h3>
               <YoutubeEmbed url={recipe.youtubeUrl} />
             </>
           )}
