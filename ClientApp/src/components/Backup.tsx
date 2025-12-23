@@ -82,25 +82,30 @@ function Backup() {
   };
 
   return (
-    <div className="mt-4">
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h1>Backup & Restore</h1>
-        <Link to="/" className="btn btn-secondary">Back to Recipes</Link>
+    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold tracking-tight text-gray-900">Backup & Restore</h1>
+        <Link 
+          to="/" 
+          className="bg-gray-600 hover:bg-gray-700 text-white font-medium px-4 py-2 rounded-lg transition-colors"
+        >
+          Back to Recipes
+        </Link>
       </div>
 
-      <div className="row">
-        <div className="col-md-6 mb-4">
-          <div className="card">
-            <div className="card-header">
-              <h5 className="mb-0">Download Backup</h5>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div>
+          <div className="bg-white rounded-lg shadow-md overflow-hidden h-full">
+            <div className="bg-gray-50 px-6 py-4 border-b border-gray-200">
+              <h5 className="text-lg font-semibold text-gray-900">Download Backup</h5>
             </div>
-            <div className="card-body">
-              <p className="text-muted">
+            <div className="p-6">
+              <p className="text-gray-600 mb-4">
                 Download all your recipes as a JSON file. You can use this file to restore your recipes later.
               </p>
               <button 
                 onClick={handleDownloadBackup}
-                className="btn btn-primary"
+                className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-lg transition-colors inline-flex items-center"
               >
                 <i className="bi bi-download me-2"></i>
                 Download Backup
@@ -109,33 +114,33 @@ function Backup() {
           </div>
         </div>
 
-        <div className="col-md-6 mb-4">
-          <div className="card">
-            <div className="card-header">
-              <h5 className="mb-0">Restore from Backup</h5>
+        <div>
+          <div className="bg-white rounded-lg shadow-md overflow-hidden h-full">
+            <div className="bg-gray-50 px-6 py-4 border-b border-gray-200">
+              <h5 className="text-lg font-semibold text-gray-900">Restore from Backup</h5>
             </div>
-            <div className="card-body">
-              <p className="text-muted">
-                Upload a JSON backup file to restore your recipes. <strong>Warning:</strong> This will replace all existing recipes.
+            <div className="p-6">
+              <p className="text-gray-600 mb-4">
+                Upload a JSON backup file to restore your recipes. <strong className="text-gray-900">Warning:</strong> This will replace all existing recipes.
               </p>
               
               {uploadMessage && (
-                <div className="alert alert-success" role="alert">
+                <div className="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg mb-4" role="alert">
                   {uploadMessage}
                 </div>
               )}
               
               {uploadError && (
-                <div className="alert alert-danger" role="alert">
+                <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg mb-4" role="alert">
                   {uploadError}
                 </div>
               )}
               
               <form onSubmit={handleFileUpload}>
-                <div className="mb-3">
+                <div className="mb-4">
                   <input 
                     type="file" 
-                    className="form-control" 
+                    className="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 focus:outline-none focus:border-blue-500 file:mr-4 file:py-2 file:px-4 file:rounded-l-lg file:border-0 file:text-sm file:font-medium file:bg-blue-600 file:text-white hover:file:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed" 
                     name="file"
                     accept=".json"
                     disabled={uploading}
@@ -143,7 +148,7 @@ function Backup() {
                 </div>
                 <button 
                   type="submit" 
-                  className="btn btn-warning"
+                  className="bg-amber-500 hover:bg-amber-600 text-white font-medium px-4 py-2 rounded-lg transition-colors inline-flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled={uploading}
                 >
                   <i className="bi bi-upload me-2"></i>
