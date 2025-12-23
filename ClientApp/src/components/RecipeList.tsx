@@ -83,77 +83,93 @@ function RecipeList() {
   }
 
   return (
-    <div className="mt-4">
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h1>Recipe Tracker</h1>
-        <Link to="/recipes/create" className="btn btn-primary">Add New Recipe</Link>
+    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold tracking-tight text-gray-900">Recipe Tracker</h1>
+        <Link 
+          to="/recipes/create" 
+          className="bg-blue-600 hover:bg-blue-700 text-white font-medium px-4 py-2 rounded-lg transition-colors"
+        >
+          Add New Recipe
+        </Link>
       </div>
 
       {recipes.length === 0 ? (
-        <div className="alert alert-info">
+        <div className="bg-blue-50 border border-blue-200 text-blue-800 px-4 py-3 rounded-lg">
           No recipes found. Click "Add New Recipe" to create your first recipe.
         </div>
       ) : (
-        <div className="row">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {recipes.map((recipe) => (
-            <div key={recipe.id} className="col-md-6 col-lg-4 mb-4">
-              <div className="card h-100">
-                <div className="card-body">
-                  <h5 className="card-title">
-                    <Link to={`/recipes/${recipe.id}`} className="text-decoration-none">
+            <div key={recipe.id} className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow flex flex-col h-full">
+              <div className="p-6 flex-grow">
+                <h5 className="text-xl font-semibold mb-2">
+                  <Link to={`/recipes/${recipe.id}`} className="text-gray-900 hover:text-blue-600 transition-colors">
                     {recipe.name}
                     {recipe.youtubeUrl && (
-                      <i className="bi bi-play-circle-fill text-danger ms-2" title="Video available"></i>
+                      <i className="bi bi-play-circle-fill text-red-600 ms-2" title="Video available"></i>
                     )}
-                    </Link>
-                  </h5>
-                  <p className="card-text">{recipe.description}</p>
-                  <div className="mb-2">
-                    <small className="text-muted">
-                      <i className="bi bi-clock"></i> Prep: {recipe.prepTimeMinutes} min | 
-                      Cook: {recipe.cookTimeMinutes} min | 
-                      Servings: {recipe.servings}
-                    </small>
-                  </div>
-                  <div className="mb-2">
-                    <strong>Ingredients:</strong>
-                    <ul className="small">
-                      {recipe.ingredients.slice(0, 3).map((ingredient, idx) => (
-                        <li key={idx}>{ingredient.quantity} {ingredient.unit} {ingredient.name}</li>
-                      ))}
-                      {recipe.ingredients.length > 3 && (
-                        <li><em>...and {recipe.ingredients.length - 3} more</em></li>
-                      )}
-                    </ul>
-                  </div>
-                  {recipe.youtubeUrl && getYoutubeVideoId(recipe.youtubeUrl) && (
-                    <div className="mb-2">
-                      <img 
-                        src={`https://img.youtube.com/vi/${getYoutubeVideoId(recipe.youtubeUrl)}/mqdefault.jpg`}
-                        alt="Video thumbnail"
-                        className="img-fluid rounded"
-                        style={{ width: '100%' }}
-                      />
-                    </div>
-                  )}
+                  </Link>
+                </h5>
+                <p className="text-gray-600 mb-4">{recipe.description}</p>
+                <div className="mb-4">
+                  <small className="text-gray-500 text-sm">
+                    <i className="bi bi-clock"></i> Prep: {recipe.prepTimeMinutes} min | 
+                    Cook: {recipe.cookTimeMinutes} min | 
+                    Servings: {recipe.servings}
+                  </small>
                 </div>
-                <div className="card-footer bg-transparent">
-                  <button 
-                    onClick={() => handleToggleShortlist(recipe.id!)}
-                    className={`btn btn-sm ${shortlistedIds.has(recipe.id!) ? 'btn-success' : 'btn-outline-success'}`}
-                    title={shortlistedIds.has(recipe.id!) ? 'Remove from shortlist' : 'Add to shortlist'}
-                  >
-                    <i className={`bi ${shortlistedIds.has(recipe.id!) ? 'bi-star-fill' : 'bi-star'}`}></i>
-                  </button>
-                  <Link to={`/recipes/${recipe.id}`} className="btn btn-sm btn-info ms-1">View</Link>
-                  <Link to={`/recipes/edit/${recipe.id}`} className="btn btn-sm btn-warning ms-1">Edit</Link>
-                  <button 
-                    onClick={() => handleDelete(recipe.id!)} 
-                    className="btn btn-sm btn-danger ms-1"
-                  >
-                    Delete
-                  </button>
+                <div className="mb-4">
+                  <strong className="text-gray-900">Ingredients:</strong>
+                  <ul className="text-sm text-gray-700 list-disc list-inside mt-1">
+                    {recipe.ingredients.slice(0, 3).map((ingredient, idx) => (
+                      <li key={idx}>{ingredient.quantity} {ingredient.unit} {ingredient.name}</li>
+                    ))}
+                    {recipe.ingredients.length > 3 && (
+                      <li className="italic text-gray-500">...and {recipe.ingredients.length - 3} more</li>
+                    )}
+                  </ul>
                 </div>
+                {recipe.youtubeUrl && getYoutubeVideoId(recipe.youtubeUrl) && (
+                  <div className="mb-4">
+                    <img 
+                      src={`https://img.youtube.com/vi/${getYoutubeVideoId(recipe.youtubeUrl)}/mqdefault.jpg`}
+                      alt="Video thumbnail"
+                      className="w-full rounded-lg"
+                    />
+                  </div>
+                )}
+              </div>
+              <div className="border-t border-gray-200 px-6 py-4 flex gap-2">
+                <button 
+                  onClick={() => handleToggleShortlist(recipe.id!)}
+                  className={`px-3 py-1.5 text-sm font-medium rounded transition-colors ${
+                    shortlistedIds.has(recipe.id!) 
+                      ? 'bg-green-600 text-white hover:bg-green-700' 
+                      : 'bg-white text-green-600 border border-green-600 hover:bg-green-50'
+                  }`}
+                  title={shortlistedIds.has(recipe.id!) ? 'Remove from shortlist' : 'Add to shortlist'}
+                >
+                  <i className={`bi ${shortlistedIds.has(recipe.id!) ? 'bi-star-fill' : 'bi-star'}`}></i>
+                </button>
+                <Link 
+                  to={`/recipes/${recipe.id}`} 
+                  className="px-3 py-1.5 text-sm font-medium rounded bg-cyan-500 text-white hover:bg-cyan-600 transition-colors"
+                >
+                  View
+                </Link>
+                <Link 
+                  to={`/recipes/edit/${recipe.id}`} 
+                  className="px-3 py-1.5 text-sm font-medium rounded bg-amber-500 text-white hover:bg-amber-600 transition-colors"
+                >
+                  Edit
+                </Link>
+                <button 
+                  onClick={() => handleDelete(recipe.id!)} 
+                  className="px-3 py-1.5 text-sm font-medium rounded bg-red-600 text-white hover:bg-red-700 transition-colors"
+                >
+                  Delete
+                </button>
               </div>
             </div>
           ))}
